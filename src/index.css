@@ -2,9 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Design system: all tokens are HSL and used via semantic classes */
 
 @layer base {
   :root {
@@ -36,30 +34,38 @@ All colors MUST be HSL.
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
 
-    --radius: 0.5rem;
+    --radius: 0.6rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Brand */
+    --brand: 330 85% 55%;       /* pink */
+    --brand-2: 260 85% 55%;     /* purple */
+    --brand-3: 210 90% 56%;     /* blue */
+    --hero-foreground: 0 0% 100%;
+
+    /* Elevation & gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--brand)), hsl(var(--brand-2)));
+    --gradient-soft: linear-gradient(180deg, hsl(var(--background)), hsl(var(--background) / 0.7));
+    --shadow-hero: 0 20px 40px -12px hsl(var(--brand) / 0.45);
+    --shadow-card: 0 12px 32px -14px hsl(var(--foreground) / 0.08);
+
+    /* Motion */
+    --transition-smooth: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 222.2 84% 6.5%;
     --card-foreground: 210 40% 98%;
 
     --popover: 222.2 84% 4.9%;
@@ -83,6 +89,7 @@ All colors MUST be HSL.
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -91,15 +98,52 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --shadow-card: 0 16px 40px -12px hsl(var(--brand-2) / 0.25);
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; font-family: 'Poppins', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+}
+
+@layer components {
+  .btn-hero {
+    background-image: var(--gradient-hero);
+    color: hsl(var(--hero-foreground));
+    box-shadow: var(--shadow-hero);
+    border: 1px solid hsl(var(--border));
+    transition: transform var(--transition-smooth), box-shadow var(--transition-smooth), filter var(--transition-smooth);
+  }
+  .btn-hero:hover { transform: translateY(-1px); filter: brightness(1.05); }
+  .btn-hero:active { transform: translateY(0); filter: brightness(0.98); }
+
+  .glass-card {
+    background: hsl(var(--card) / 0.7);
+    backdrop-filter: saturate(160%) blur(10px);
+    -webkit-backdrop-filter: saturate(160%) blur(10px);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-card);
   }
 
-  body {
-    @apply bg-background text-foreground;
+  .text-hero-gradient { 
+    background-image: var(--gradient-hero); 
+    -webkit-background-clip: text; background-clip: text; color: transparent; 
+  }
+  .text-hero-foreground { color: hsl(var(--hero-foreground)); }
+
+
+  .spotlight { position: relative; }
+  .spotlight::before {
+    content: "";
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(600px circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%), hsl(var(--brand) / 0.15), transparent 60%);
+    transition: opacity var(--transition-smooth);
+    opacity: 0.9;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-hero { transition: none; }
+    .spotlight::before { transition: none; }
   }
 }
